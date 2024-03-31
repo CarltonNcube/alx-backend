@@ -39,27 +39,25 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-        """Returns pagination information based on index and page_size."""
-        assert index is None or (isinstance(index, int) and index >= 0),
-        assert isinstance(page_size, int) and page_size > 0,
-
-        dataset_len = len(self.dataset())
-        if index is None:
-            index = 0
-        elif index >= dataset_len:
-            return {
-                "index": dataset_len,
-                "next_index": dataset_len,
-                "page_size": page_size,
-                "data": []
-            }
-
-        next_index = min(index + page_size, dataset_len)
-        data = [self.dataset()[i] for i in range(index, next_index)]
-
-        return {
-            "index": index,
-            "next_index": next_index,
-            "page_size": page_size,
-            "data": data
-        }
+        """
+        The goal here is that if between two queries,
+        certain rows are removed from the dataset, the user
+        does not miss items from dataset when changing page.
+        Args:
+            index (int): start index of the current page
+            page_size (int): size of items required in current page
+        Returns:
+            Dict[int, int|List[List]|None]: a dict of the following:
+                * index, next_index, page_size, data
+        """
+        focus = []
+        dataset = self.indexed_dataset()
+        index = 0 if index is None else index
+        keys = sorted(dataset.keys())
+        assert index >= 0 and index <= keys[-1]
+        [focus.append(i)
+         for i in keys if i >= index and len(focus) <= page_size]
+        data = [dataset[v] for v in focus[:-1]]
+        next_index = focus[-1] if len(focus) - page_size == 1 else None
+        return {'index': index, 'data': data,
+                'page_size': len(data), 'next_index': next_index}
