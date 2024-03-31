@@ -3,7 +3,7 @@
 It indicates that the function returns a tuple containing two integers
 from typing import Tuple
 """
-
+from typing import Tuple
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
