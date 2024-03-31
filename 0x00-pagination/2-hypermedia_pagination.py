@@ -2,6 +2,7 @@
 """
 The function adds `get_hyper` method to `Server` class
 """
+
 import csv
 from typing import Dict, List, Tuple, Union
 
