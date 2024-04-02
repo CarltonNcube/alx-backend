@@ -6,9 +6,10 @@ BasicCache module
 
 from base_caching import BaseCaching
 
+
 class BasicCache(BaseCaching):
     """
-    BasicCache inherits from BaseCaching and is a caching system with no limit
+    Inherits from BaseCaching and is a caching system with no limit
     """
 
     def put(self, key, item):
