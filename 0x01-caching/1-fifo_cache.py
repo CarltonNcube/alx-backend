@@ -6,6 +6,7 @@ FIFOCache module
 
 from base_caching import BaseCaching
 
+
 class FIFOCache(BaseCaching):
     """
     Inherits from BaseCaching and is a caching system using FIFO algorithm
