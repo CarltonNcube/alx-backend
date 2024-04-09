@@ -6,6 +6,10 @@
     <title>{% trans %}Welcome to Holberton{% endtrans %}</title>
 </head>
 <body>
-    <h1>{% trans %}Hello world!{% endtrans %}</h1>
+    {% if get_locale() == 'fr' %}
+        <h1>Bonjour monde!</h1>
+    {% else %}
+        <h1>Hello world!</h1>
+    {% endif %}
 </body>
 </html>
