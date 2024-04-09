@@ -36,23 +36,12 @@ def get_locale():
     """
     Determine user's preferred locale
     """
-    # Check if the locale is provided in URL parameters
     locale_from_url = request.args.get('locale')
     if locale_from_url:
         return locale_from_url
-
-    # Check if the user's locale is set
-    if g.user and g.user.get('locale') in app.config['LANGUAGES']:
+    if g.user and g.user.get('locale'):
         return g.user['locale']
-
-    # Check the request header for accepted languages
-    request_languages = [lang for lang, _ in request.accept_languages]
-    for lang in request_languages:
-        if lang in app.config['LANGUAGES']:
-            return lang
-
-    # Return the default locale if none of the above conditions are met
-    return app.config['BABEL_DEFAULT_LOCALE']
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 @app.route('/')
 def index():
@@ -62,4 +51,4 @@ def index():
     return render_template('6-index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run()
