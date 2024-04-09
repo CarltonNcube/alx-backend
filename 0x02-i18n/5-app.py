@@ -3,7 +3,7 @@
 5-app module - A Flask app with user login emulation
 """
 
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, request
 from flask_babel import Babel
 
 app = Flask(__name__)
@@ -18,19 +18,19 @@ users = {
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
 
-@app.before_request
-def before_request():
-    """
-    Executed before all other functions
-    """
-    g.user = get_user()
-
 def get_user():
     """
     Retrieve user based on login_as URL parameter
     """
     user_id = int(request.args.get('login_as', 0))
     return users.get(user_id)
+
+@app.before_request
+def before_request():
+    """
+    Executed before all other functions
+    """
+    g.user = get_user()
 
 @app.route('/')
 def index():
