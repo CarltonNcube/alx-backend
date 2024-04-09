@@ -5,13 +5,11 @@
 
 from flask import Flask, render_template, g, request
 from flask_babel import Babel, _
-import os
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 babel = Babel(app)
 
-# Mock user table
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -26,36 +24,24 @@ def get_user():
     user_id = int(request.args.get('login_as', 0))
     return users.get(user_id)
 
-def get_locale():
-    """
-    Determine user's preferred locale
-    """
-    # Check URL parameters
-    locale_from_url = request.args.get('locale')
-    if locale_from_url:
-        return locale_from_url
-
-    # Check user settings
-    if g.user:
-        user_locale = g.user.get('locale')
-        if user_locale:
-            return user_locale
-
-    # Check request header
-    locale_from_header = request.accept_languages.best_match(['en', 'fr', 'kg'])
-    if locale_from_header:
-        return locale_from_header
-
-    # Default locale
-    return 'en'
-
 @app.before_request
 def before_request():
     """
     Executed before all other functions
     """
     g.user = get_user()
-    g.locale = get_locale()
+
+@babel.localeselector
+def get_locale():
+    """
+    Determine user's preferred locale
+    """
+    locale_from_url = request.args.get('locale')
+    if locale_from_url:
+        return locale_from_url
+    if g.user and g.user.get('locale'):
+        return g.user['locale']
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 @app.route('/')
 def index():
@@ -66,4 +52,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5000')
-
