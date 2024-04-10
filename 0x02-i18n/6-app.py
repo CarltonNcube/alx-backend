@@ -21,6 +21,8 @@ users = {
 def get_user():
     """
     Retrieve user based on login_as URL parameter
+
+    :return: User information dictionary
     """
     user_id = int(request.args.get('login_as', 0))
     return users.get(user_id)
@@ -38,6 +40,8 @@ def before_request():
 def get_locale():
     """
     Determine user's preferred locale
+
+    :return: Preferred locale
     """
     locale_from_url = request.args.get('locale')
     if locale_from_url:
@@ -51,9 +55,12 @@ def get_locale():
 def index():
     """
     Renders index.html template
+
+    :return: Rendered template
     """
     return render_template('6-index.html')
 
 
 if __name__ == '__main__':
     app.run()
+
