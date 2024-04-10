@@ -24,7 +24,6 @@ class Config:
 app.config.from_object(Config)
 
 
-@babel.localeselector
 def get_locale() -> str:
     """
     Determine the best-matching language from the request
@@ -46,5 +45,5 @@ def index() -> str:
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0', port='5000', debug=True)
 
